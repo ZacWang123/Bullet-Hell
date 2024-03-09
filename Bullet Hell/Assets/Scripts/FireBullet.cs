@@ -16,8 +16,8 @@ public class FireBullet : MonoBehaviour
     {
         //InvokeRepeating("Pattern1", 0f, 0.3f);
         //InvokeRepeating("Pattern2", 0f, 0.1f);
-        //InvokeRepeating("Pattern3", 0f, 0.15f);
-        InvokeRepeating("Pattern4", 0f, 0.1f);
+        InvokeRepeating("Pattern3", 0f, 0.15f);
+        //InvokeRepeating("Pattern4", 0f, 0.1f);
     }
 
     void Pattern1()
