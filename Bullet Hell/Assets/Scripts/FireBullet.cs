@@ -15,7 +15,8 @@ public class FireBullet : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("Pattern1", 0f, 0.5f);
+        //InvokeRepeating("Pattern1", 0f, 0.7f);
+        InvokeRepeating("Pattern2", 0f, 0.1f);
     }
 
     void Pattern1()
@@ -29,8 +30,8 @@ public class FireBullet : MonoBehaviour
 
         for (int i = 0; i < numBullets + 1; i++) 
         {
-            bulDirX = transform.position.x + Mathf.Sin((angle * Mathf.PI) / 90f);
-            bulDirY = transform.position.y + Mathf.Cos((angle * Mathf.PI) / 90f);
+            bulDirX = transform.position.x + Mathf.Sin((angle * Mathf.PI) / 180f);
+            bulDirY = transform.position.y + Mathf.Cos((angle * Mathf.PI) / 180f);
 
             Vector3 bulMoveVector = new Vector3(bulDirX, bulDirY, 0f);
             Vector2 bulDir = (bulMoveVector - transform.position).normalized;
@@ -40,8 +41,32 @@ public class FireBullet : MonoBehaviour
             bul.transform.rotation = transform.rotation;
             bul.SetActive(true);
             bul.GetComponent<Bullet>().SetBulletDirection(bulDir);
-            print(angle);
             angle += angleStep;
+        }
+    }
+
+    void Pattern2()
+    {
+        for (int i = 0; i <= 2; i++)
+        {
+            bulDirX = transform.position.x + Mathf.Sin(((angle + 120f * i) * Mathf.PI) / 180f);
+            bulDirY = transform.position.y + Mathf.Cos(((angle + 120f * i) * Mathf.PI) / 180f);
+
+            Vector3 bulMoveVector = new Vector3(bulDirX, bulDirY, 0f);
+            Vector2 bulDir = (bulMoveVector - transform.position).normalized;
+
+            GameObject bul = BulletPool.bulletPoolInstance.GetBullet();
+            bul.transform.position = transform.position;
+            bul.transform.rotation = transform.rotation;
+            bul.SetActive(true);
+            bul.GetComponent<Bullet>().SetBulletDirection(bulDir);
+            angle += angleStep;
+        }
+
+        angle += 10f;
+        if (angle > 360f)
+        {
+            angle = 0f;
         }
     }
 
