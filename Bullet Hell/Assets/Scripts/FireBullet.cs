@@ -5,6 +5,7 @@ using UnityEngine;
 public class FireBullet : MonoBehaviour
 {
     Vector2 screenBounds;
+    bool reverseAngle;
     int numBullets;
     int openSpace;
     float startAngle, endAngle;
@@ -16,6 +17,7 @@ public class FireBullet : MonoBehaviour
     void Start()
     {
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 2, Screen.height, Camera.main.transform.position.z));
+        StartCoroutine(StartPatterns());
         //InvokeRepeating("Pattern1", 0f, 0.3f);
         //InvokeRepeating("Pattern2", 0f, 0.1f);
         //InvokeRepeating("Pattern3", 0f, 0.25f);
@@ -23,8 +25,51 @@ public class FireBullet : MonoBehaviour
         //InvokeRepeating("Pattern5", 0f, 0.1f);
         //InvokeRepeating("Pattern6", 0f, 0.5f);
         //InvokeRepeating("Pattern7", 0f, 0.05f);
+        //InvokeRepeating("Pattern8", 0f, 0.1f);
         //Invoke("PatternA", 0f);
-        Invoke("PatternB", 0f);
+        //Invoke("PatternB", 0f);
+    }
+    IEnumerator StartPatterns()
+    {
+        InvokeRepeating("Pattern1", 0f, 0.3f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern2", 0f, 0.1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern3", 0f, 0.25f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern4", 0f, 0.1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern5", 0f, 0.1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern6", 0f, 0.5f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern7", 0f, 0.05f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern8", 0f, 0.1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("PatternA", 0f, 1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("PatternB", 0f, 1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
     }
 
     void Pattern1()
@@ -216,6 +261,45 @@ public class FireBullet : MonoBehaviour
         if (angle > 360f)
         {
             angle = 0f;
+        }
+    }
+
+    void Pattern8()
+    {
+        for (int i = 0; i <= 2; i++)
+        {
+            bulDirX = transform.position.x + Mathf.Sin(((angle + 120f * i) * Mathf.PI) / 180f);
+            bulDirY = transform.position.y + Mathf.Cos(((angle + 120f * i) * Mathf.PI) / 180f);
+
+            Vector3 bulMoveVector = new Vector3(bulDirX, bulDirY, 0f);
+            Vector2 bulDir = (bulMoveVector - transform.position).normalized;
+
+            GameObject bul = BulletPool.bulletPoolInstance.GetBullet();
+            bul.transform.position = transform.position;
+            bul.transform.rotation = transform.rotation;
+            bul.SetActive(true);
+            bul.GetComponent<Bullet>().bulletSpeed = 12f;
+            bul.GetComponent<Bullet>().BulletDuration(4f);
+            bul.GetComponent<Bullet>().SetBulletDirection(bulDir);
+        }
+
+        if (reverseAngle)
+        {
+            angle -= 10;
+        }
+        else
+        {
+            angle += 10;
+        }
+
+        if (angle == 180f)
+        {
+            reverseAngle = true;
+        }
+        else if (angle == 0)
+        {
+            reverseAngle = false;
+
         }
     }
 
