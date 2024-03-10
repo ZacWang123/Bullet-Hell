@@ -12,6 +12,9 @@ public class Bullet : MonoBehaviour
     public float timePassed;
     public float angleChange;
 
+    void Start()
+    {
+    }
     IEnumerator WaitForFunction(float waitTime, string action)
     {
         yield return new WaitForSeconds(waitTime);
@@ -25,16 +28,10 @@ public class Bullet : MonoBehaviour
             ChangeDirection();
         }
     }
-    void OnEnable()
-    {
-    }
 
     public void BulletDuration(float bulletDuration)
     {
         Invoke("Destroy", bulletDuration);
-    }
-    void Start()
-    {
     }
 
     void Update()
