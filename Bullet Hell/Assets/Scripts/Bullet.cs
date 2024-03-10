@@ -8,13 +8,22 @@ public class Bullet : MonoBehaviour
 {
     public Vector2 bulletDirection;
     public float bulletSpeed;
+    public float speedChange;
     public float timePassed;
     public float angleChange;
 
-    IEnumerator WaitForFunction(float waitTime)
+    IEnumerator WaitForFunction(float waitTime, string action)
     {
         yield return new WaitForSeconds(waitTime);
-        ChangeDirection();
+        if (action == "Change Speed")
+        {
+            ChangeSpeed();
+        }
+
+        if (action == "Change Direction")
+        {
+            ChangeDirection();
+        }
     }
     void OnEnable()
     {
@@ -26,7 +35,6 @@ public class Bullet : MonoBehaviour
     }
     void Start()
     {
-        bulletSpeed = 12f;   
     }
 
     void Update()
@@ -34,6 +42,16 @@ public class Bullet : MonoBehaviour
         transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
     }
 
+    public void SpeedDelay(float waitTime, float newBulletSpeed)
+    {
+        speedChange = newBulletSpeed;
+        StartCoroutine(WaitForFunction(waitTime, "Change Speed"));
+    }
+
+    public void ChangeSpeed()
+    {
+        bulletSpeed = speedChange;
+    }
     public void SetBulletDirection(Vector2 direction)
     {
         bulletDirection = direction;
@@ -47,7 +65,7 @@ public class Bullet : MonoBehaviour
     public void DirectionDelay(float waitTime, float angle)
     {
         angleChange = angle;
-        StartCoroutine(WaitForFunction(waitTime));
+        StartCoroutine(WaitForFunction(waitTime, "Change Direction"));
     }
 
     public void ChangeDirection()
