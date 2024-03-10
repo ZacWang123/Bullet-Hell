@@ -9,18 +9,21 @@ public class Bullet : MonoBehaviour
     public Vector2 bulletDirection;
     public float bulletSpeed;
     public float timePassed;
+    public float angleChange;
 
     IEnumerator WaitForFunction(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         ChangeDirection();
     }
-    
     void OnEnable()
     {
-        Invoke("Destroy", 3.5f);
     }
 
+    public void BulletDuration(float bulletDuration)
+    {
+        Invoke("Destroy", bulletDuration);
+    }
     void Start()
     {
         bulletSpeed = 12f;   
@@ -41,19 +44,26 @@ public class Bullet : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void DirectionDelay(float waitTime)
+    public void DirectionDelay(float waitTime, float angle)
     {
+        angleChange = angle;
         StartCoroutine(WaitForFunction(waitTime));
     }
 
     public void ChangeDirection()
     {
-        float tempX = bulletDirection.x;
-        float tempY = bulletDirection.y;
-        bulletDirection.x = tempY * -1;
-        bulletDirection.y = tempX;
+        bulletDirection = rotate(bulletDirection, angleChange);
     }
 
+    public static Vector2 rotate(Vector2 v, float degrees)
+    {
+        float radian = degrees * Mathf.Deg2Rad;
+
+        return new Vector2(
+            v.x * Mathf.Cos(radian) - v.y * Mathf.Sin(radian),
+            v.x * Mathf.Sin(radian) + v.y * Mathf.Cos(radian)
+        );
+    }
     private void OnDisable()
     {
         CancelInvoke();
