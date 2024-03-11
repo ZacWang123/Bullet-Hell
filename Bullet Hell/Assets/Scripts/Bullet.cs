@@ -8,8 +8,11 @@ using UnityEngine.UIElements;
 public class Bullet : MonoBehaviour
 {
     public GameObject player;
+    public Vector2 defaultVector;
     public Vector2 bulletDirection;
     public Vector2 bulletOriginLocation;
+    public Vector2 bulletTargetLocation;
+    public float defaultFloat;
     public float bulletSpeed;
     public float speedChange;
     public float timePassed;
@@ -19,22 +22,27 @@ public class Bullet : MonoBehaviour
     {
         player = GameObject.Find("Player");
     }
-    IEnumerator WaitForFunction(float waitTime, string action)
+    IEnumerator WaitForFunction(float waitTime, string action, Vector2 vectorValue, float floatValue)
     {
         yield return new WaitForSeconds(waitTime);
         if (action == "Change Speed")
         {
-            ChangeSpeed();
+            ChangeSpeed(floatValue);
         }
 
-        if (action == "Change Direction")
+        if (action == "Change Rotation")
         {
-            ChangeRotation();
+            ChangeRotation(floatValue);
         }
 
         if (action == "Change Target")
         {
-            ChangeDirection();
+            TargetPlayer(vectorValue);
+        }
+
+        if (action == "Change Location")
+        {
+            ChangeLocation(vectorValue);
         }
     }
 
@@ -50,11 +58,10 @@ public class Bullet : MonoBehaviour
 
     public void SpeedDelay(float waitTime, float newBulletSpeed)
     {
-        speedChange = newBulletSpeed;
-        StartCoroutine(WaitForFunction(waitTime, "Change Speed"));
+        StartCoroutine(WaitForFunction(waitTime, "Change Speed", defaultVector, newBulletSpeed));
     }
 
-    public void ChangeSpeed()
+    public void ChangeSpeed(float speedChange)
     {
         bulletSpeed = speedChange;
     }
@@ -70,23 +77,32 @@ public class Bullet : MonoBehaviour
 
     public void RotationDelay(float waitTime, float angle)
     {
-        angleChange = angle;
-        StartCoroutine(WaitForFunction(waitTime, "Change Direction"));
+        StartCoroutine(WaitForFunction(waitTime, "Change Rotation", defaultVector, angle));
     }
 
-    public void DirectionDelay(float waitTime, Vector2 originLocation)
+    public void DelayTargetPlayer(float waitTime, Vector2 originLocation)
     {
-        bulletOriginLocation = originLocation;
-        StartCoroutine(WaitForFunction(waitTime, "Change Target"));
+        StartCoroutine(WaitForFunction(waitTime, "Change Target", originLocation, defaultFloat));
     }
 
-    public void ChangeRotation()
+    public void DirectionDelay(float waitTime, Vector2 targetLocation)
+    {
+        StartCoroutine(WaitForFunction(waitTime, "Change Location", targetLocation, defaultFloat));
+    }
+
+    public void ChangeLocation(Vector2 targetLocation)
+    {
+        bulletDirection = new Vector2(targetLocation.x, targetLocation.y);
+    }
+
+    public void ChangeRotation(float angleChange)
     {
         bulletDirection = rotate(bulletDirection, angleChange);
     }
 
-    public void ChangeDirection()
+    public void TargetPlayer(Vector2 originLocation)
     {
+        bulletOriginLocation = originLocation;
         bulletDirection = new Vector2(player.transform.position.x - bulletOriginLocation.x, player.transform.position.y - bulletOriginLocation.y).normalized * 4;
     }
 

@@ -17,7 +17,7 @@ public class FireBullet : MonoBehaviour
     void Start()
     {
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - 2, Screen.height, Camera.main.transform.position.z));
-        //StartCoroutine(StartPatterns());
+        StartCoroutine(StartPatterns());
         //InvokeRepeating("Pattern1", 0f, 0.3f);
         //InvokeRepeating("Pattern2", 0f, 0.1f);
         //InvokeRepeating("Pattern3", 0f, 0.25f);
@@ -26,7 +26,9 @@ public class FireBullet : MonoBehaviour
         //InvokeRepeating("Pattern6", 0f, 0.5f);
         //InvokeRepeating("Pattern7", 0f, 0.05f);
         //InvokeRepeating("Pattern8", 0f, 0.1f);
-        InvokeRepeating("Pattern9", 0f, 2f);
+        //InvokeRepeating("Pattern9", 0f, 2f);
+        //InvokeRepeating("Pattern10", 0f, 0.2f);
+        //Pattern10();
         //Invoke("PatternA", 0f);
         //Invoke("PatternB", 0f);
     }
@@ -61,6 +63,14 @@ public class FireBullet : MonoBehaviour
         CancelInvoke();
         yield return new WaitForSeconds(3);
         InvokeRepeating("Pattern8", 0f, 0.1f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        InvokeRepeating("Pattern9", 0f, 2f);
+        yield return new WaitForSeconds(5);
+        CancelInvoke();
+        yield return new WaitForSeconds(3);
+        Invoke("Pattern10", 0f);
         yield return new WaitForSeconds(5);
         CancelInvoke();
         yield return new WaitForSeconds(3);
@@ -121,7 +131,7 @@ public class FireBullet : MonoBehaviour
         }
 
         angle += 10f;
-        if (angle > 360f)
+        if (angle > 360)
         {
             angle = 0f;
         }
@@ -330,8 +340,37 @@ public class FireBullet : MonoBehaviour
             bul.GetComponent<Bullet>().SetBulletDirection(bulDir);
             bul.GetComponent<Bullet>().SpeedDelay(0.3f, 0f);
             bul.GetComponent<Bullet>().SpeedDelay(0.7f, 8f);
-            bul.GetComponent<Bullet>().DirectionDelay(0.5f, transform.position);
+            bul.GetComponent<Bullet>().DelayTargetPlayer(0.5f, transform.position);
             angle += angleStep;
+        }
+    }
+
+    void Pattern10()
+    {
+        numBullets = 4;
+        angle = 90f;
+
+        for (int i = 1; i < numBullets + 1; i++)
+        {
+            bulDirX = transform.position.x + Mathf.Sin((angle * Mathf.PI) / 180f);
+            bulDirY = transform.position.y + Mathf.Cos((angle * Mathf.PI) / 180f);
+
+            Vector3 bulMoveVector = new Vector3(bulDirX, bulDirY, 0f);
+            Vector2 bulDir = (bulMoveVector - transform.position).normalized * (i*0.5f);
+
+            GameObject bul = BulletPool.bulletPoolInstance.GetBullet();
+            bul.transform.position = transform.position;
+            bul.transform.rotation = transform.rotation;
+            bul.SetActive(true);
+            bul.GetComponent<Bullet>().bulletSpeed = 12f;
+            bul.GetComponent<Bullet>().BulletDuration(5f);
+            bul.GetComponent<Bullet>().SetBulletDirection(bulDir);
+            bul.GetComponent<Bullet>().SpeedDelay(1f, 0f);
+            bul.GetComponent<Bullet>().SpeedDelay(1.5f, 6f);
+            bul.GetComponent<Bullet>().DirectionDelay(1.5f, new Vector2(-i, -i));
+            bul.GetComponent<Bullet>().DirectionDelay(3f, new Vector2(-i, i));
+            bul.GetComponent<Bullet>().DirectionDelay(4f, new Vector2(i, i));
+
         }
     }
 
