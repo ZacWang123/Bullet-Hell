@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {
+    public GameObject player;
     public Vector2 bulletDirection;
+    public Vector2 bulletOriginLocation;
     public float bulletSpeed;
     public float speedChange;
     public float timePassed;
@@ -14,6 +17,7 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.Find("Player");
     }
     IEnumerator WaitForFunction(float waitTime, string action)
     {
@@ -24,6 +28,11 @@ public class Bullet : MonoBehaviour
         }
 
         if (action == "Change Direction")
+        {
+            ChangeRotation();
+        }
+
+        if (action == "Change Target")
         {
             ChangeDirection();
         }
@@ -59,15 +68,26 @@ public class Bullet : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void DirectionDelay(float waitTime, float angle)
+    public void RotationDelay(float waitTime, float angle)
     {
         angleChange = angle;
         StartCoroutine(WaitForFunction(waitTime, "Change Direction"));
     }
 
-    public void ChangeDirection()
+    public void DirectionDelay(float waitTime, Vector2 originLocation)
+    {
+        bulletOriginLocation = originLocation;
+        StartCoroutine(WaitForFunction(waitTime, "Change Target"));
+    }
+
+    public void ChangeRotation()
     {
         bulletDirection = rotate(bulletDirection, angleChange);
+    }
+
+    public void ChangeDirection()
+    {
+        bulletDirection = new Vector2(player.transform.position.x - bulletOriginLocation.x, player.transform.position.y - bulletOriginLocation.y).normalized * 4;
     }
 
     public static Vector2 rotate(Vector2 v, float degrees)
