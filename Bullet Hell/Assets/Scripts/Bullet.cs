@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     public float speedChange;
     public float timePassed;
     public float angleChange;
+    public bool circling;
 
     void Start()
     {
@@ -30,11 +31,6 @@ public class Bullet : MonoBehaviour
             ChangeSpeed(floatValue);
         }
 
-        if (action == "Change Rotation")
-        {
-            ChangeRotation(floatValue);
-        }
-
         if (action == "Change Target")
         {
             TargetPlayer(vectorValue);
@@ -44,6 +40,18 @@ public class Bullet : MonoBehaviour
         {
             ChangeLocation(vectorValue);
         }
+    }
+
+    IEnumerator rotationWaitFunction(float waitTime, float angleRotate, float numRotations, float rotationInterval)
+    {
+        int rotationCounter = 0;
+        yield return new WaitForSeconds(waitTime);
+        while (rotationCounter < numRotations)
+        {
+            ChangeRotation(angleRotate);
+            yield return new WaitForSeconds(rotationInterval);
+            rotationCounter++;
+        }   
     }
 
     public void BulletDuration(float bulletDuration)
@@ -75,11 +83,6 @@ public class Bullet : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void RotationDelay(float waitTime, float angle)
-    {
-        StartCoroutine(WaitForFunction(waitTime, "Change Rotation", defaultVector, angle));
-    }
-
     public void DelayTargetPlayer(float waitTime, Vector2 originLocation)
     {
         StartCoroutine(WaitForFunction(waitTime, "Change Target", originLocation, defaultFloat));
@@ -98,6 +101,11 @@ public class Bullet : MonoBehaviour
     public void ChangeRotation(float angleChange)
     {
         bulletDirection = rotate(bulletDirection, angleChange);
+    }
+
+    public void RotationDelay(float waitTime, float angleRotate, float numRotations, float rotationInterval)
+    {
+        StartCoroutine(rotationWaitFunction(waitTime, angleRotate, numRotations, rotationInterval));
     }
 
     public void TargetPlayer(Vector2 originLocation)
