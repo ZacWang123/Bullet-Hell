@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour
     public float timePassed;
     public float angleChange;
     public bool circling;
+    public bool updatePosition;
 
     void Start()
     {
@@ -54,14 +55,14 @@ public class Bullet : MonoBehaviour
         }   
     }
 
-    public void BulletDuration(float bulletDuration)
-    {
-        Invoke("Destroy", bulletDuration);
-    }
-
     void Update()
     {
         transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
+    }
+
+    public void BulletDuration(float bulletDuration)
+    {
+        Invoke("Destroy", bulletDuration);
     }
 
     public void SpeedDelay(float waitTime, float newBulletSpeed)
@@ -83,8 +84,9 @@ public class Bullet : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void DelayTargetPlayer(float waitTime, Vector2 originLocation)
+    public void DelayTargetPlayer(float waitTime, Vector2 originLocation, bool updatingPosition)
     {
+        updatePosition = updatingPosition;
         StartCoroutine(WaitForFunction(waitTime, "Change Target", originLocation, defaultFloat));
     }
 
@@ -110,7 +112,15 @@ public class Bullet : MonoBehaviour
 
     public void TargetPlayer(Vector2 originLocation)
     {
-        bulletOriginLocation = originLocation;
+        if (updatePosition)
+        {
+            bulletOriginLocation = transform.position;
+        }
+        else 
+        {
+            bulletOriginLocation = originLocation;
+        }
+
         bulletDirection = new Vector2(player.transform.position.x - bulletOriginLocation.x, player.transform.position.y - bulletOriginLocation.y).normalized * 4;
     }
 
