@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class HealthManager : MonoBehaviour
 {
-    int health = 5;
-    float moveSpeed = 15;
     bool playerVulnerable = true;
-    Rigidbody2D rb;
+    int health = 5;
+    public Image[] hearts;
+    public Sprite FullHeart;
+    public Sprite EmptyHeart;
     Renderer playerRenderer;
-
+    Rigidbody2D rb;
 
     IEnumerator WaitForInvulnerability()
     {
@@ -46,15 +48,14 @@ public class Player : MonoBehaviour
             playerVulnerable = false;
             ChangeColour(1f, 1f, 1f, 0.4f);
             Damage();
-
         }
     }
 
     void PlayerDead()
     {
         Debug.Log(rb.name + " has died.");
-        Application.Quit();
         Destroy(rb);
+        Application.Quit();
     }
 
     void ChangeColour(float red, float blue, float green, float alpha)
@@ -62,15 +63,15 @@ public class Player : MonoBehaviour
         playerRenderer.material.color = new Color(red, blue, green, alpha);
     }
 
-    void FixedUpdate()
-    {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        rb.velocity = new Vector2(x, y).normalized * moveSpeed;
-    }
     void Update()
     {
-        
+        foreach (Image img in hearts)
+        {
+            img.sprite = EmptyHeart;
+        }
+        for (int i = 0; i < health; i++)
+        {
+            hearts[i].sprite = FullHeart;
+        }
     }
 }

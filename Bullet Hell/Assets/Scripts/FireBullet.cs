@@ -38,7 +38,6 @@ public class FireBullet : MonoBehaviour
     }
     IEnumerator StartPatterns()
     {
-        /*
         InvokeRepeating("Pattern1", 0f, 0.3f);
         yield return new WaitForSeconds(5);
         CancelInvoke();
@@ -71,7 +70,6 @@ public class FireBullet : MonoBehaviour
         yield return new WaitForSeconds(5);
         CancelInvoke();
         yield return new WaitForSeconds(3);
-        */
         InvokeRepeating("Pattern9", 0f, 2f);
         yield return new WaitForSeconds(5);
         CancelInvoke();
@@ -96,7 +94,6 @@ public class FireBullet : MonoBehaviour
         yield return new WaitForSeconds(5);
         CancelInvoke();
         yield return new WaitForSeconds(3);
-        /*
         InvokeRepeating("PatternA", 0f, 1f);
         yield return new WaitForSeconds(5);
         CancelInvoke();
@@ -105,7 +102,6 @@ public class FireBullet : MonoBehaviour
         yield return new WaitForSeconds(5);
         CancelInvoke();
         yield return new WaitForSeconds(3);
-        */
         Invoke("PatternC", 0f);
         yield return new WaitForSeconds(5);
         CancelInvoke();
